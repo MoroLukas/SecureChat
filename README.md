@@ -19,8 +19,8 @@ Una semplice applicazione di chat **sicura** sviluppata con **Node.js**, che inc
 
 ## 📦 Installazione
 
-    git clone https://github.com/tuo-username/secure-chat-app.git
-    cd secure-chat-app
+    git clone https://github.com/Morolukas/SecureChat.git
+    cd SecureChat
     npm install
 
 Crea un file `.env` nella root del progetto con queste variabili:
