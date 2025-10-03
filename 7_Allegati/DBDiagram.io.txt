@@ -1,0 +1,51 @@
+Table users {
+  id integer [primary key, increment]
+  username varchar [not null, unique]
+  password_hash text [not null]
+  public_key text [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  last_seen_at timestamp [default: null]
+  is_active boolean [default: true]
+}
+
+Table friend_requests {
+  id integer [primary key, increment]
+  sender_id integer [not null]
+  receiver_id integer [not null]
+  status enum('pending', 'accepted', 'rejected') [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  responded_at timestamp [default: null]
+  indexes {
+    (sender_id, receiver_id) [unique]
+  }
+}
+
+Table blocked_users {
+  blocker_id integer [not null]
+  blocked_id integer [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  indexes {
+    (blocker_id, blocked_id) [pk]
+  }
+}
+
+Table messages {
+  id integer [primary key, increment]
+  sender_id integer [not null]
+  receiver_id integer [not null]
+  ciphertext text [not null]
+  sent_at timestamp [default: `CURRENT_TIMESTAMP`]
+  delivered boolean [default: false]
+  delivered_at timestamp [default: null]
+}
+
+// References (foreign keys)
+
+Ref: friend_requests.sender_id > users.id
+Ref: friend_requests.receiver_id > users.id
+
+Ref: blocked_users.blocker_id > users.id
+Ref: blocked_users.blocked_id > users.id
+
+Ref: messages.sender_id > users.id
+Ref: messages.receiver_id > users.id
