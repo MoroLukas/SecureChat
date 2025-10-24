@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const { nanoid } = require('nanoid');
 const User = require('../models/User');
-const { generateTokenAndCookie } = require('../utils/tokenUtils');
+const { generateAccessToken, generateRefreshToken } = require('../utils/tokenUtils');
+const cookie_max_age = process.env.COOKIE_MAX_AGE;
 
 exports.signup = async (req, res) => {
   try{
@@ -62,7 +63,15 @@ exports.login = async (req, res) => {
 			return res.status(400).json({ error: "Invalid username or password" });
 		}
 
-		generateTokenAndCookie(user.uuid, res);
+		const accessToken = generateAccessToken(user.uuid);
+    const refreshToken = generateRefreshToken(user.uuid);
+
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: cookie_max_age,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+    });
 
 		res.status(200).json({
 			uuid: user.uuid,
@@ -77,7 +86,7 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
 	try {
-		res.cookie("jwt", "", { maxAge: 0 });
+		res.cookie("refreshToken", "", { maxAge: 0 });
 		res.status(200).json({ message: "Logged out successfully" });
 	} catch (error) {
 		console.log("Error in logout controller", error.message);

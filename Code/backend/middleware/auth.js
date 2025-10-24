@@ -7,7 +7,7 @@ exports.authenticate = (req, res, next) => {
 
   try {
     const decodedToken = verifyToken(token);
-    req.userId = decodedToken.id;
+    req.userId = decodedToken.uuid;
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {

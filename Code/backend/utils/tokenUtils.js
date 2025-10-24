@@ -1,24 +1,22 @@
 const jwt = require('jsonwebtoken');
 
 const secret = process.env.ACCESS_TOKEN_SECRET;
-const expires = process.env.ACCESS_TOKEN_EXPIRES;
-
-exports.generateToken = (user) => {
-  return jwt.sign({ id: user._id }, secret, { expiresIn: expires || '1h' });
-};
+const refresh_secret = process.env.REFRESH_TOKEN_SECRET;
+const access_token_expires = process.env.ACCESS_TOKEN_EXPIRES;
+const refresh_token_expires = process.env.REFRESH_TOKEN_EXPIRES;
 
 exports.verifyToken = (token) => {
   return jwt.verify(token, secret);
 };
-exports.generateTokenAndCookie = (userUUID, res) => {
-	const token = jwt.sign({ userUUID }, secret, {
-		expiresIn: "30d",
-	});
 
-	res.cookie("jwt", token, {
-		maxAge: 30 * 24 * 60 * 60 * 1000, // MS
-		httpOnly: true,
-		sameSite: "strict",
-		secure: process.env.NODE_ENV !== "development",
+exports.generateAccessToken = (user) =>{
+    return jwt.sign({ user }, secret, {
+		expiresIn: access_token_expires,
 	});
-};
+}
+
+exports.generateRefreshToken = (user) =>{
+    return jwt.sign({ user }, refresh_secret, {
+		expiresIn: refresh_token_expires,
+	});
+}
