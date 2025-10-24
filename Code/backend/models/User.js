@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    id: {
-        type: Number,
+    uuid: {
+        type: String,
         required: true,
         unique: true
     },
@@ -18,7 +19,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         maxlength: 255
     },
-    password_hash: {
+    password: {
         type: String,
         required: true
     },

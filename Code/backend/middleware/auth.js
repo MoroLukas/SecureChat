@@ -1,20 +1,18 @@
 const jwt = require('jsonwebtoken');
+const { verifyToken } = require('../utils/tokenUtils');
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+exports.authenticate = (req, res, next) => {
+  const token = req.cookies.jwt
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
-  if (!token) {
-    return res.status(401).json({ message: 'Token di accesso richiesto' });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Token non valido' });
-    }
-    req.user = user;
+  try {
+    const decodedToken = verifyToken(token);
+    req.userId = decodedToken.id;
     next();
-  });
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Token expired' });
+    }
+    res.status(401).json({ error: 'Invalid token' });
+  }
 };
-
-module.exports = { authenticateToken };
