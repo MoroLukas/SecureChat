@@ -5,7 +5,7 @@ const { getReceiverSocketId, io } = require( "../config/socket.js");
 
 exports.getUsersForSidebar = async (req, res) => {
   try {
-    const loggedInUserId = req.user.uuid;
+    const loggedInUserId = req.sender_uuid;
     const filteredUsers = await User.find({ uuid: { $ne: loggedInUserId } }).select("-password");
 
     res.status(200).json(filteredUsers);
@@ -18,7 +18,7 @@ exports.getUsersForSidebar = async (req, res) => {
 exports.getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
-    const myId = req.user.uuid;
+    const myId = req.sender_uuid;
 
     const messages = await Message.find({
       $or: [
@@ -38,7 +38,7 @@ exports.sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
-    const senderId = req.uuid;
+    const senderId = req.sender_uuid;
 
     let imageUrl;
     if (image) {
