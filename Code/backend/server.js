@@ -8,7 +8,6 @@ const socketIo = require("socket.io");
 const connectDB = require('./config/db');
 const authRoutes = require("./routes/authRoute");
 const messagesRoute = require("./routes/messagesRoute");
-const tokensRoute = require("./routes/tokensRoute");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -19,9 +18,8 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use("/auth", authRoutes);
-app.use("/message", messagesRoute);
-app.use("/token", tokensRoute);
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messagesRoute);
 
 connectDB();
 
