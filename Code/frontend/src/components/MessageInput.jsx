@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { Image, Send, X, Smile, Paperclip } from "lucide-react";
+import { Image, Send, X, Paperclip } from "lucide-react";
 import toast from "react-hot-toast";
+import Emojis from "./Emojis";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
@@ -81,12 +82,7 @@ const MessageInput = () => {
               <Paperclip className="size-5" />
             </button>
 
-            <button
-                type="button"
-                className="btn btn-ghost btn-circle text-purple-400 hover:text-purple-300 hover:bg-purple-900/30"
-            >
-              <Smile className="size-5" />
-            </button>
+            <Emojis onSelect={(emoji) => setText((prev) => (prev ?? "") + emoji)} />
 
             {/* Text input */}
             <input

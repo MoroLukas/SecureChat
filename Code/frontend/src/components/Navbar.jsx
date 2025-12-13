@@ -7,7 +7,7 @@ const Navbar = () => {
 
   return (
       <header
-          className="bg-gray-900 border-b border-purple-900/50 fixed w-full top-0 z-40
+          className="bg-gray-900 fixed w-full top-0 z-40
     backdrop-blur-lg bg-gray-900/90"
       >
         <div className="container mx-auto px-4 h-16">

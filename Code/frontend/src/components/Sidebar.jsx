@@ -21,9 +21,9 @@ const Sidebar = () => {
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
-      <aside className="h-full w-20 lg:w-80 bg-gray-900 border-r border-purple-900/50 flex flex-col transition-all duration-200">
+      <aside className="h-full w-20 lg:w-80 bg-gray-900 flex flex-col transition-all duration-200">
         {/* Header */}
-        <div className="border-b border-base-300 w-full p-5">
+        <div className="border-b border-purple-900/50 w-full p-5">
           <div className="flex items-center gap-2">
             <Users className="size-6 text-purple-400" />
             <span className="font-medium hidden lg:block text-purple-400">Contatti</span>
@@ -78,7 +78,7 @@ const Sidebar = () => {
                 <div className="hidden lg:block text-left flex-1 min-w-0">
                   <div className="font-semibold text-purple-100 truncate">{user.username}</div>
                   <div className="text-sm text-purple-300 flex items-center gap-1">
-                    <span className={`size-2 rounded-full ${onlineUsers.includes(user._id) ? "bg-purple-500" : "bg-purple-700"}`}></span>
+                    <span className={`${onlineUsers.includes(user._id) ? "bg-purple-500" : "bg-purple-700"}`}></span>
                     {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                   </div>
                 </div>

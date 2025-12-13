@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import PasswordModal from "./components/PasswordModal";
 
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
@@ -7,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
+import { useChatStore } from "./store/useChatStore";
 import { useEffect } from "react";
 
 import { Loader } from "lucide-react";
@@ -14,6 +16,7 @@ import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  const { isPasswordModalOpen, closePasswordModal } = useChatStore();
 
   console.log({ onlineUsers });
 
@@ -40,6 +43,12 @@ const App = () => {
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
+
+      <PasswordModal 
+        isOpen={isPasswordModalOpen} 
+        onClose={() => closePasswordModal(null)}
+        onSubmit={(password) => closePasswordModal(password)}
+      />
 
       <Toaster />
     </div>

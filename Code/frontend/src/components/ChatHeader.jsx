@@ -27,9 +27,6 @@ const ChatHeader = () => {
                     className="rounded-full border-2 border-purple-700/50"
                 />
               </div>
-              {onlineUsers.includes(selectedUser._id) && (
-                  <span className="absolute bottom-0 right-0 size-3 bg-purple-500 rounded-full border-2 border-gray-900" />
-              )}
             </div>
 
             {/* User info */}

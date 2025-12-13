@@ -35,28 +35,28 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2">
-      {/* left side */}
+    <div className="h-screen grid lg:grid-cols-2">
+      {/* Left Side - Form */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* LOGO */}
+          {/* Logo */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div
-                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
-              group-hover:bg-primary/20 transition-colors"
+                className="w-12 h-12 rounded-xl bg-purple-400 flex items-center justify-center group-hover:bg-purple-500
+              transition-colors"
               >
-                <MessageSquare className="size-6 text-primary" />
+                <MessageSquare className="w-6 h-6 300" />
               </div>
-              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
-              <p className="text-base-content/60">Get started with your free account</p>
+              <h1 className="text-2xl font-bold text-purple-400 mt-2">Crea un nuovo account!</h1>
+              <p className="text-purple-400">Crea un nuovo account per iniziare a chattare</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Full Name</span>
+                <span className="label-text font-medium text-purple-400">Nome completo</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -74,7 +74,7 @@ const SignUpPage = () => {
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Email</span>
+                <span className="label-text font-medium text-purple-400">Email</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -92,7 +92,7 @@ const SignUpPage = () => {
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Password</span>
+                <span className="label-text font-medium text-purple-400">Password</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -119,23 +119,23 @@ const SignUpPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
+            <button type="submit" className="btn bg-purple-400 hover:bg-purple-300 hover:border-current w-full border-current" disabled={isSigningUp}>
               {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
-                  Loading...
+                  Caricamento...
                 </>
               ) : (
-                "Create Account"
+                "Crea un nuovo account"
               )}
             </button>
           </form>
 
           <div className="text-center">
-            <p className="text-base-content/60">
-              Already have an account?{" "}
+            <p className="text-purple-300">
+              Hai già un account?{" "}
               <Link to="/login" className="link link-primary">
-                Sign in
+                Accedi
               </Link>
             </p>
           </div>
@@ -145,8 +145,8 @@ const SignUpPage = () => {
       {/* right side */}
 
       <AuthImagePattern
-        title="Join our community"
-        subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
+        title="Unisciti alla nostra community"
+        subtitle="Connettiti con amici, condividi momenti, e resta in contatto con i tuoi amati."
       />
     </div>
   );

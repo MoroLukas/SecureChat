@@ -7,6 +7,7 @@ const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
+  decryptionPassword: null, // held in-memory only
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
@@ -19,10 +20,11 @@ export const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.get("/auth/check");
 
       set({ authUser: res.data });
+
       get().connectSocket();
     } catch (error) {
       console.log("Error in checkAuth:", error);
-      set({ authUser: null });
+      set({ authUser: null, decryptionPassword: null });
     } finally {
       set({ isCheckingAuth: false });
     }
@@ -32,7 +34,11 @@ export const useAuthStore = create((set, get) => ({
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/auth/signup", data);
-      set({ authUser: res.data });
+
+      set({ 
+        authUser: res.data,
+        decryptionPassword: null
+      });
       toast.success("Account created successfully");
       get().connectSocket();
     } catch (error) {
@@ -46,7 +52,11 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      set({ authUser: res.data });
+
+      set({ 
+        authUser: res.data,
+        decryptionPassword: null
+      });
       toast.success("Logged in successfully");
 
       get().connectSocket();
@@ -60,7 +70,11 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
-      set({ authUser: null });
+
+      set({ 
+        authUser: null,
+        decryptionPassword: null
+      });
       toast.success("Logged out successfully");
       get().disconnectSocket();
     } catch (error) {
@@ -88,4 +102,6 @@ export const useAuthStore = create((set, get) => ({
   disconnectSocket: () => {
     if (get().socket?.connected) get().socket.disconnect();
   },
+
+  setDecryptionPassword: (password) => set({ decryptionPassword: password }),
 }));
