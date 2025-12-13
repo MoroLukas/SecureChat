@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Lock, Eye, EyeOff, X } from "lucide-react";
+import { useChatStore } from "../store/useChatStore";
 
 const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { selectedUser, setSelectedUser } = useChatStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -35,6 +37,7 @@ const PasswordModal = ({ isOpen, onClose, onSubmit }) => {
   const handleCancel = () => {
     onSubmit(null);
     setPassword("");
+    setSelectedUser(null);
   };
 
   if (!isOpen) return null;
