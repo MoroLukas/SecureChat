@@ -1,26 +1,6 @@
 import crypto from "crypto";
 import User from "../models/User.js";
 
-// Decripta una chiave privata protetta con la password dell'utente e la restituisce in chiaro
-export const decryptPrivateKey = (encryptedPrivateKey, password) => {
-    try {
-        const privateKeyObject = crypto.createPrivateKey({
-            key: encryptedPrivateKey,
-            format: "pem",
-            type: "pkcs8",
-            passphrase: password,
-        });
-
-        return privateKeyObject.export({
-            format: "pem",
-            type: "pkcs8",
-        });
-    } catch (error) {
-        console.error("Errore nella decifratura della chiave privata:", error);
-        throw new Error("Impossibile decifrare la chiave privata");
-    }
-};
-
 export const encryptMessage = async (receiverId, text) => {
     try{
         const receiver = await User.findById(receiverId).select("publicKey");
@@ -42,9 +22,10 @@ export const encryptMessage = async (receiverId, text) => {
     }
 }
 
+// Funzione per decifrare un messaggio usando userId e password
 export const decryptMessage = async (userId, password, encryptedText) => {
     try{
-        const user = await User.findById(userId).select("privatekey");
+        const user = await User.findById(userId).select("privateKey");
         if (!user || !user.privateKey) {
             throw new Error("Chiave privata non trovata");
         }
@@ -55,7 +36,7 @@ export const decryptMessage = async (userId, password, encryptedText) => {
             passphrase: password
         });
         const encryptedBuffer = Buffer.from(encryptedText, "base64");
-        return crypto.privateDecrypt(
+        const decrypted = crypto.privateDecrypt(
             {
                 key: privateKey,
                 padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
@@ -63,9 +44,34 @@ export const decryptMessage = async (userId, password, encryptedText) => {
             },
             encryptedBuffer
         );
+        return decrypted.toString('utf8');
     } catch (error) {
-        console.log("Errore nella cifratura: " + error);
-        throw new Error("Errore con la chiave pubblica");
+        console.log("Errore nella decifratura: " + error);
+        throw new Error("Errore nella decifratura del messaggio");
+    }
+}
+
+// Funzione per decifrare un messaggio usando la chiave privata già decifrata
+export const decryptMessageWithPrivateKey = (decryptedPrivateKey, encryptedText) => {
+    try {
+        const privateKey = crypto.createPrivateKey({
+            key: decryptedPrivateKey,
+            format: 'pem',
+            type: 'pkcs8'
+        });
+        const encryptedBuffer = Buffer.from(encryptedText, "base64");
+        const decrypted = crypto.privateDecrypt(
+            {
+                key: privateKey,
+                padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+                oaepHash: 'sha256'
+            },
+            encryptedBuffer
+        );
+        return decrypted.toString('utf8');
+    } catch (error) {
+        console.log("Errore nella decifratura: " + error);
+        throw new Error("Errore nella decifratura del messaggio");
     }
 }
 
@@ -190,5 +196,24 @@ const hybridDecrypt = async (privateKey, encryptedData) => {
     } catch (error) {
         console.error("Errore nella decifratura ibrida:", error);
         throw new Error("Errore nella decifratura ibrida");
+    }
+};
+
+export const decryptPrivateKey = (encryptedPrivateKey, password) => {
+    try {
+        const privateKey = crypto.createPrivateKey({
+            key: encryptedPrivateKey,
+            format: 'pem',
+            type: 'pkcs8',
+            passphrase: password,
+        });
+
+        return privateKey.export({
+            format: 'pem',
+            type: 'pkcs8'
+        });
+    } catch (error) {
+        console.error("Error decifrando la private key:", error);
+        throw new Error("Fallito a decifrare la chiave privata");
     }
 };

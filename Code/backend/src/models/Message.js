@@ -15,8 +15,17 @@ const messageSchema = new mongoose.Schema(
     text: {
       type: String,
     },
-    image: {
+    // copia cifrata per il mittente, in modo da poterla rileggere dopo refresh
+    senderCopy: {
       type: String,
+    },
+    // immagine cifrata (può essere oggetto ibrido)
+    image: {
+      type: mongoose.Schema.Types.Mixed,
+    },
+    // copia cifrata dell'immagine per il mittente
+    senderImageCopy: {
+      type: mongoose.Schema.Types.Mixed,
     },
   },
   { timestamps: true }

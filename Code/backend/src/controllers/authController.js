@@ -3,7 +3,6 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { generateKeyPairSync } from "crypto";
-import {decryptPrivateKey} from "../config/cryptoUtils.js";
 
 export const signup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -86,16 +85,6 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Credenziali non valide" });
     }
 
-    let decryptedPrivateKey;
-    try {
-      decryptedPrivateKey = decryptPrivateKey(user.privateKey, password);
-    } catch (error) {
-      console.error("Failed to decrypt private key:", error);
-      return res.status(400).json({
-        message: "Errore nella decifratura della chiave. Password errata o chiave corrotta."
-      });
-    }
-
     generateToken(user._id, res);
 
     res.status(200).json({
@@ -103,8 +92,7 @@ export const login = async (req, res) => {
       username: user.username,
       email: user.email,
       profilePic: user.profilePic,
-      publicKey: user.publicKey,
-      privateKey: decryptedPrivateKey,
+      publicKey: user.publicKey
     });
   } catch (error) {
     console.log("Error in login controller", error.message);
